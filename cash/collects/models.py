@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 
 
 User = get_user_model()
@@ -25,6 +26,7 @@ class Collect(models.Model):
         blank=True,
         null=True,
         related_name="collects",
+        verbose_name="Автор сбора",
     )
     name = models.CharField(
         max_length=50,
@@ -37,12 +39,19 @@ class Collect(models.Model):
     purpose = models.PositiveIntegerField(
         verbose_name="Сумма, которую запланировали собрать",
         help_text="Введите сумму, которую планируете собрать",
+        validators=(
+            MinValueValidator(1, "Нужно постараться собрать хоть, что-то"),
+        ),
     )
     current_money = models.PositiveIntegerField(
-        verbose_name="Сумма, которую собрали на текущий момент"
+        verbose_name="Сумма, которую собрали на текущий момент",
+        default=0,
+        editable=False,
     )
     count_people = models.PositiveIntegerField(
-        verbose_name="Количество людей, уже сделавших пожертвования"
+        verbose_name="Количество людей, уже сделавших пожертвования",
+        editable=False,
+        default=0,
     )
     logo = models.ImageField(
         verbose_name="Обложка сбора",
@@ -55,6 +64,9 @@ class Collect(models.Model):
         help_text="Введите дату и время завершения сбора",
     )
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Payment(models.Model):
     """Модель описывающая Платеж для сбора."""
@@ -62,13 +74,20 @@ class Payment(models.Model):
     money = models.PositiveIntegerField(
         verbose_name="Сумма пожертвования",
         help_text="Введите сумму пожертвования",
+        validators=(MinValueValidator(1, "Пожертвуйте хоть что-нибудь"),),
     )
     date_time_payment = models.DateTimeField(
-        verbose_name="Дата и время платежа"
+        verbose_name="Дата и время платежа", auto_now_add=True
     )
     donating = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="payments"
+        User,
+        on_delete=models.PROTECT,
+        related_name="payments",
+        verbose_name="Пользователь, делающий пожертвование",
     )
     collect = models.ForeignKey(
-        Collect, on_delete=models.PROTECT, related_name="payments"
+        Collect,
+        on_delete=models.PROTECT,
+        related_name="payments",
+        verbose_name="Групповой денежный сбор",
     )

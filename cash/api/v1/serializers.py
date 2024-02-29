@@ -18,7 +18,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ("id",)
+        fields = ("id", "money")
 
 
 class CollectSerializer(serializers.ModelSerializer):
@@ -26,4 +26,4 @@ class CollectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Collect
-        fields = ("id",)
+        fields = ("id", "purpose")
