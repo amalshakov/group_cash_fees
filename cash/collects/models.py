@@ -5,19 +5,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Payment(models.Model):
-    """Модель описывающая Платеж для сбора."""
-
-    money = models.PositiveIntegerField(
-        verbose_name="Сумма пожертвования",
-        help_text="Введите сумму пожертвования",
-    )
-    date_time_payment = models.DateTimeField(
-        verbose_name="Дата и время платежа"
-    )
-    donating = models.ForeignKey(User, on_delete=models.PROTECT)
-
-
 class Collect(models.Model):
     """Модель Группового денежного сбора."""
 
@@ -32,7 +19,13 @@ class Collect(models.Model):
         verbose_name="Повод для сбора",
         help_text="Введите повод для сбора",
     )
-    author = models.ForeignKey(User, on_delete=models.PROTECT)
+    author = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="collects",
+    )
     name = models.CharField(
         max_length=50,
         verbose_name="Название сбора",
@@ -60,4 +53,22 @@ class Collect(models.Model):
     date_time_collect = models.DateTimeField(
         verbose_name="Дата и время завершения сбора",
         help_text="Введите дату и время завершения сбора",
+    )
+
+
+class Payment(models.Model):
+    """Модель описывающая Платеж для сбора."""
+
+    money = models.PositiveIntegerField(
+        verbose_name="Сумма пожертвования",
+        help_text="Введите сумму пожертвования",
+    )
+    date_time_payment = models.DateTimeField(
+        verbose_name="Дата и время платежа"
+    )
+    donating = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="payments"
+    )
+    collect = models.ForeignKey(
+        Collect, on_delete=models.PROTECT, related_name="payments"
     )
