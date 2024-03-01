@@ -43,16 +43,16 @@ class Collect(models.Model):
             MinValueValidator(1, "Нужно постараться собрать хоть, что-то"),
         ),
     )
-    current_money = models.PositiveIntegerField(
-        verbose_name="Сумма, которую собрали на текущий момент",
-        default=0,
-        editable=False,
-    )
-    count_people = models.PositiveIntegerField(
-        verbose_name="Количество людей, уже сделавших пожертвования",
-        editable=False,
-        default=0,
-    )
+    # current_money = models.PositiveIntegerField(
+    #     verbose_name="Сумма, которую собрали на текущий момент",
+    #     default=0,
+    #     editable=False,
+    # )
+    # count_people = models.PositiveIntegerField(
+    #     verbose_name="Количество людей, уже сделавших пожертвования",
+    #     editable=False,
+    #     default=0,
+    # )
     logo = models.ImageField(
         verbose_name="Обложка сбора",
         help_text="Загрузите картинку",

@@ -14,8 +14,8 @@ class CollectAdmin(admin.ModelAdmin):
         "name",
         "description",
         "purpose",
-        "current_money",
-        "count_people",
+        # "current_money",
+        # "count_people",
         "logo",
         "date_time_collect",
     )
