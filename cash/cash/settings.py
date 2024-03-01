@@ -1,12 +1,16 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = "-$z)5be_!t6jt=cqz+ys98q2r9#ed5$*wqqk77j_9z8ns5v6er"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "qwerty")
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -58,6 +62,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("DB_NAME", "postgres"),
+#         "USER": os.getenv("POSTGRES_USER", "postgres"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+#         "HOST": os.getenv("DB_HOST", "db"),
+#         "PORT": os.getenv("DB_PORT", "5432"),
+#     },
+# }
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -73,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru"
 
 TIME_ZONE = "UTC"
 
@@ -88,3 +103,25 @@ STATIC_ROOT = BASE_DIR + "/collected_static"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR + "/media"
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
+
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
