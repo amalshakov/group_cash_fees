@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "collects",
     "api",
     "rest_framework",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
