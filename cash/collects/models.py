@@ -64,6 +64,10 @@ class Collect(models.Model):
         help_text="Введите дату и время завершения сбора",
     )
 
+    class Meta:
+        verbose_name = "Групповой денежный сбор"
+        verbose_name_plural = "Групповые денежные сборы"
+
     def __str__(self) -> str:
         return self.name
 
@@ -91,3 +95,7 @@ class Payment(models.Model):
         related_name="payments",
         verbose_name="Групповой денежный сбор",
     )
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
